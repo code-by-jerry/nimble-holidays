@@ -1,0 +1,722 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Nimble Holidays</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout concept: a backwater-green hero edged with a kasavu gold border, then a shop-style destination grid that feeds a trip list and quotation form. */
+:root {
+  --bg: #F1F6F4;
+  --surface: #FFFFFF;
+  --ink: #0B2A26;
+  --muted: #4A645E;
+  --line: #D0DFD9;
+  --brand: #0E5A50;
+  --brand-ink: #FFFFFF;
+  --accent: #F4A300;
+  --accent-ink: #2A1B00;
+  --deep: #07302B;
+  --on-deep: #EAF6F2;
+  --on-deep-muted: #A9C9C1;
+  --focus: #0B6B5E;
+  --danger: #B3261E;
+  --f-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --f-body: 'Hanken Grotesk', system-ui, sans-serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #071B18; --surface: #0E2A26; --ink: #E6F2EE; --muted: #9AB7AF; --line: #1F4039;
+    --brand: #35B3A0; --brand-ink: #04211D; --accent: #FFB92E; --accent-ink: #2A1B00;
+    --deep: #04110F; --on-deep: #EAF6F2; --on-deep-muted: #8FB2A9; --focus: #FFB92E; --danger: #FF8A80;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #071B18; --surface: #0E2A26; --ink: #E6F2EE; --muted: #9AB7AF; --line: #1F4039;
+  --brand: #35B3A0; --brand-ink: #04211D; --accent: #FFB92E; --accent-ink: #2A1B00;
+  --deep: #04110F; --on-deep: #EAF6F2; --on-deep-muted: #8FB2A9; --focus: #FFB92E; --danger: #FF8A80;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 7rem; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 1rem; line-height: 1.55; padding-bottom: 5.5rem; }
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.08; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.wrap { max-width: 72rem; margin-inline: auto; padding-inline: 16px; }
+.mono { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--deep); color: var(--on-deep); }
+.top-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--f-display); font-weight: 800; font-size: 1.2rem; letter-spacing: -0.01em; }
+.brand svg { width: 30px; height: 30px; flex: none; }
+.brand span b { color: var(--accent); font-weight: 800; }
+.nav { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+.nav::-webkit-scrollbar { display: none; }
+.nav a { flex: none; text-decoration: none; font-size: 0.9rem; font-weight: 500; padding: 6px 12px; border-radius: 999px; color: var(--on-deep-muted); }
+.nav a:hover { color: var(--on-deep); background: rgba(255,255,255,0.08); }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 2px solid transparent; border-radius: 999px; padding: 11px 20px; font-weight: 700; font-size: 0.95rem; text-decoration: none; cursor: pointer; background: none; line-height: 1.2; }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-primary:hover { filter: brightness(1.06); }
+.btn-ghost { border-color: currentColor; }
+.btn-ghost:hover { background: rgba(127,127,127,0.12); }
+.btn-brand { background: var(--brand); color: var(--brand-ink); }
+.btn-brand:hover { filter: brightness(1.08); }
+.btn-sm { padding: 8px 14px; font-size: 0.85rem; }
+.btn-wa { background: #1FA855; color: #fff; }
+.btn-wa:hover { filter: brightness(1.08); }
+.btn svg { width: 18px; height: 18px; flex: none; }
+
+/* hero */
+.hero { background: var(--deep); color: var(--on-deep); padding-top: 2.5rem; position: relative; }
+.hero-grid { display: grid; gap: 2rem; align-items: center; padding-bottom: 3rem; }
+.eyebrow { color: var(--accent); display: block; margin-bottom: 1rem; }
+.hero h1 { font-size: clamp(2.7rem, 10vw, 5.4rem); font-weight: 800; letter-spacing: -0.03em; }
+.hero h1 em { font-style: normal; color: var(--accent); display: block; }
+.hero-sub { margin-top: 1.25rem; max-width: 34rem; font-size: 1.1rem; color: var(--on-deep-muted); }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 1.75rem; }
+.hero-cta .btn-ghost { color: var(--on-deep); }
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.75rem; padding: 0; list-style: none; }
+.hero-tags li { font-size: 0.85rem; padding: 5px 12px; border: 1px solid rgba(255,255,255,0.22); border-radius: 999px; color: var(--on-deep); }
+.hero-art { aspect-ratio: 16 / 11; max-width: 100%; border-radius: 14px; overflow: hidden; border: 2px solid var(--accent); }
+.hero-art svg { display: block; width: 100%; height: 100%; }
+.kasavu { height: 12px; background:
+  linear-gradient(var(--accent), var(--accent)) top / 100% 2px no-repeat,
+  repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 10px) bottom / 100% 5px no-repeat; }
+
+/* sections */
+.sec { padding-block: 3.5rem; }
+.sec-alt { background: var(--surface); border-block: 1px solid var(--line); }
+.sec-head { display: grid; gap: 0.6rem; margin-bottom: 1.75rem; max-width: 40rem; }
+.sec-head h2 { font-size: clamp(1.7rem, 5vw, 2.5rem); font-weight: 700; }
+.sec-head p { color: var(--muted); }
+.sec-head .mono { color: var(--brand); }
+
+/* steps */
+.steps { display: grid; gap: 1rem; padding: 0; margin: 0; list-style: none; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); counter-reset: s; }
+.steps li { counter-increment: s; padding-top: 0.9rem; border-top: 2px solid var(--brand); }
+.steps li::before { content: "Step " counter(s); display: block; font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand); margin-bottom: 0.35rem; }
+.steps b { display: block; font-family: var(--f-display); font-size: 1.15rem; margin-bottom: 0.2rem; }
+.steps span { color: var(--muted); font-size: 0.95rem; }
+
+/* filters + place cards */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.chip { border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 7px 16px; font-weight: 600; font-size: 0.9rem; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.grid { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; transition: transform .15s ease, box-shadow .15s ease; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(7,48,43,0.12); }
+.card-art { aspect-ratio: 16 / 10; overflow: hidden; }
+.card-art svg { display: block; width: 100%; height: 100%; }
+.card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+.card-body h3 { font-size: 1.2rem; font-weight: 700; }
+.card-body p { color: var(--muted); font-size: 0.93rem; flex: 1; }
+.tag { color: var(--brand); }
+.card .btn { margin-top: 8px; width: 100%; }
+.add { border-color: var(--line); background: var(--bg); }
+.add:hover { border-color: var(--brand); }
+.add[aria-pressed="true"] { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); }
+
+/* planner */
+.plan { display: grid; gap: 1.5rem; align-items: start; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1.25rem; min-width: 0; }
+.panel h3 { font-size: 1.25rem; margin-bottom: 0.25rem; }
+.count { color: var(--muted); font-size: 0.9rem; }
+.triplist { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 10px; }
+.triplist li { display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: center; padding: 8px; border: 1px solid var(--line); border-radius: 10px; min-width: 0; }
+.triplist .th { width: 64px; height: 46px; border-radius: 6px; overflow: hidden; }
+.triplist .th svg { width: 100%; height: 100%; display: block; }
+.triplist b { display: block; font-size: 0.97rem; overflow-wrap: anywhere; }
+.triplist small { color: var(--muted); }
+.x { border: 0; background: none; cursor: pointer; width: 34px; height: 34px; border-radius: 50%; font-size: 1.2rem; line-height: 1; color: var(--muted); }
+.x:hover { background: var(--bg); color: var(--ink); }
+.empty { margin-top: 1rem; padding: 1.25rem; border: 1.5px dashed var(--line); border-radius: 10px; color: var(--muted); font-size: 0.95rem; }
+.empty a { color: var(--brand); font-weight: 600; }
+
+.form { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label, .field legend { font-weight: 600; font-size: 0.9rem; }
+.field input, .field select, .field textarea { width: 100%; padding: 11px 12px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--bg); min-width: 0; }
+.field textarea { min-height: 5.5rem; resize: vertical; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--brand); }
+fieldset.field { border: 0; padding: 0; margin: 0; }
+.row2 { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
+.row2 > * { min-width: 0; }
+.hint { color: var(--muted); font-size: 0.85rem; }
+.checks { display: flex; flex-wrap: wrap; gap: 8px; }
+.checks label { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border: 1.5px solid var(--line); border-radius: 999px; font-size: 0.9rem; font-weight: 500; cursor: pointer; background: var(--bg); }
+.checks input { width: 1rem; height: 1rem; accent-color: var(--brand); margin: 0; }
+.checks label:has(input:checked) { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 14%, var(--surface)); }
+.err { color: var(--danger); font-weight: 600; font-size: 0.92rem; min-height: 1.2em; }
+.inline-check { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
+.inline-check input { width: 1rem; height: 1rem; accent-color: var(--brand); }
+
+.result { display: grid; gap: 1rem; }
+.result .ref { font-family: var(--f-mono); font-size: 1.1rem; font-weight: 500; color: var(--brand); }
+.result pre { margin: 0; padding: 1rem; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--f-mono); font-size: 0.82rem; line-height: 1.6; }
+.result .acts { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* packages */
+.pkg .route { font-family: var(--f-mono); font-size: 0.78rem; color: var(--muted); letter-spacing: 0.02em; }
+.pkg .dur { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.pkg .nights { font-family: var(--f-display); font-weight: 800; font-size: 1.5rem; color: var(--brand); }
+.pkg ul { margin: 4px 0 0; padding-left: 1.1rem; color: var(--muted); font-size: 0.9rem; }
+.pkg .quote { font-size: 0.82rem; color: var(--muted); font-family: var(--f-mono); }
+
+/* ayurveda */
+.ay { background: var(--deep); color: var(--on-deep); }
+.ay .sec-head p, .ay .sec-head .mono { color: var(--on-deep-muted); }
+.ay .sec-head .mono { color: var(--accent); }
+.ay-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+.ay-item { border: 1px solid rgba(255,255,255,0.18); border-radius: 12px; padding: 1.1rem; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.ay-item h3 { font-size: 1.2rem; }
+.ay-item .len { color: var(--accent); }
+.ay-item p { color: var(--on-deep-muted); font-size: 0.93rem; }
+.ay-item .btn { margin-top: 6px; color: var(--on-deep); }
+
+/* flights */
+.fl { display: grid; gap: 1.5rem; align-items: start; }
+.routes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
+.route-chip { border: 1.5px solid var(--line); background: var(--bg); border-radius: 999px; padding: 6px 14px; cursor: pointer; font-size: 0.88rem; font-weight: 500; }
+.route-chip:hover { border-color: var(--brand); }
+.radios { display: flex; gap: 8px; }
+.radios label { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--bg); font-size: 0.9rem; cursor: pointer; }
+.radios input { accent-color: var(--brand); margin: 0; width: auto; }
+.radios label:has(input:checked) { border-color: var(--brand); }
+
+/* services */
+.svc { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); }
+.svc-item { border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem; background: var(--surface); display: grid; gap: 8px; align-content: start; min-width: 0; }
+.svc-item svg { width: 28px; height: 28px; stroke: var(--brand); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.svc-item h3 { font-size: 1.1rem; }
+.svc-item p { color: var(--muted); font-size: 0.92rem; }
+.svc-item .btn { justify-self: start; margin-top: 4px; }
+
+/* footer */
+.foot { background: var(--deep); color: var(--on-deep); padding-block: 2.5rem; }
+.foot-grid { display: grid; gap: 1.25rem; }
+.foot p { color: var(--on-deep-muted); }
+.foot .big { font-family: var(--f-display); font-size: 1.6rem; font-weight: 800; color: var(--on-deep); }
+
+/* dock + toast */
+.dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 0 16px calc(12px + env(safe-area-inset-bottom, 0px)); pointer-events: none; }
+.dock > * { pointer-events: auto; box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
+.dock-trip { display: inline-flex; align-items: center; gap: 10px; background: var(--accent); color: var(--accent-ink); border-radius: 999px; padding: 10px 18px; text-decoration: none; font-size: 0.92rem; margin-right: auto; }
+.dock-trip strong { font-weight: 700; }
+.toast { position: fixed; left: 50%; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 0.9rem; z-index: 40; max-width: calc(100% - 32px); text-align: center; }
+
+@media (min-width: 640px) { .form.cols { grid-template-columns: 1fr 1fr; } .form .full { grid-column: 1 / -1; } .sec { padding-block: 4.5rem; } }
+@media (min-width: 900px) {
+  .hero-grid { grid-template-columns: 1.1fr 0.9fr; padding-bottom: 4rem; }
+  .plan { grid-template-columns: 0.8fr 1.2fr; }
+  .plan .panel.sticky { position: sticky; top: 7rem; }
+  .fl { grid-template-columns: 0.8fr 1.2fr; }
+  .foot-grid { grid-template-columns: 1.4fr 1fr; align-items: end; }
+}
+@media (max-width: 400px) { .row2 { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .card { transition: none; } .card:hover { transform: none; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="top-row">
+      <a class="brand" href="#top" aria-label="Nimble Holidays home">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="var(--accent)" stroke-width="2"/><path d="M9 23l4-10 10-4-4 10z" fill="var(--accent)"/><circle cx="16" cy="16" r="2" fill="var(--deep)"/></svg>
+        <span>Nimble <b>Holidays</b></span>
+      </a>
+      <a class="btn btn-wa btn-sm" id="waTop" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.4-4.3A8.5 8.5 0 1 1 8.5 18.8z"/><path d="M9 10h6M9 13h4"/></svg>
+        WhatsApp
+      </a>
+    </div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#destinations">Destinations</a>
+      <a href="#plan">Create your trip</a>
+      <a href="#packages">Packages</a>
+      <a href="#ayurveda">Ayurveda</a>
+      <a href="#flights">Flights</a>
+      <a href="#services">Services</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow mono">Since 2010 · Onattukara, Mavelikkara, Kerala</span>
+        <h1>The World Is <em>for Everyone.</em></h1>
+        <p class="hero-sub">Pick the places and experiences you like, add them to your trip list, and tell us your dates, group and budget. Our team replies with a quotation made for you.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#destinations">Select your destinations</a>
+          <a class="btn btn-ghost" href="#plan">Create your own trip</a>
+        </div>
+        <ul class="hero-tags">
+          <li>Customised itineraries</li>
+          <li>Flights and hotels</li>
+          <li>Kerala Ayurveda</li>
+        </ul>
+      </div>
+      <div class="hero-art" id="heroArt" role="img" aria-label="Illustration of a houseboat on the Kerala backwaters at sunrise"></div>
+    </div>
+    <div class="kasavu" aria-hidden="true"></div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head"><span class="mono">How it works</span><h2>Plan it like you shop for it</h2></div>
+      <ol class="steps">
+        <li><b>Select</b><span>Browse places and experiences and add the ones you like.</span></li>
+        <li><b>Share the details</b><span>Add travel dates, number of travellers and your budget.</span></li>
+        <li><b>Get your quotation</b><span>We prepare a customised itinerary and price for your group.</span></li>
+        <li><b>Confirm on WhatsApp</b><span>Ask questions, change plans and confirm with the team.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" id="destinations">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="mono">Select your destination</span>
+        <h2>Where do you want to go?</h2>
+        <p>Tap Add to build your trip list. Nothing is booked until you approve a quotation.</p>
+      </div>
+      <div class="chips" role="group" aria-label="Filter destinations" id="filters"></div>
+      <div class="grid" id="placeGrid"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="plan">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="mono">Create your own trip</span>
+        <h2>Send us your trip list</h2>
+        <p>Add your dates, travellers and budget. We reply with a customised itinerary and quotation.</p>
+      </div>
+      <div class="plan">
+        <aside class="panel sticky" aria-labelledby="tlHead">
+          <h3 id="tlHead">Your trip list</h3>
+          <p class="count" id="tlCount"></p>
+          <ul class="triplist" id="tripList"></ul>
+          <div class="empty" id="tripEmpty">Nothing added yet. <a href="#destinations">Browse destinations</a> and tap Add, or describe your idea in the notes.</div>
+        </aside>
+        <div class="panel">
+          <form id="planForm" class="form cols" novalidate>
+            <div class="field"><label for="pf-name">Your name</label><input id="pf-name" name="name" autocomplete="name" required></div>
+            <div class="field"><label for="pf-phone">WhatsApp number</label><input id="pf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+966 5X XXX XXXX" required></div>
+            <div class="field"><label for="pf-country">Where do you live?</label>
+              <select id="pf-country" name="country" required>
+                <option value="">Select country</option>
+                <option>Saudi Arabia</option><option>United Arab Emirates</option><option>Qatar</option><option>Kuwait</option><option>Oman</option><option>Bahrain</option><option>India</option><option>Other</option>
+              </select></div>
+            <div class="field"><label for="pf-accom">Accommodation</label>
+              <select id="pf-accom" name="accom">
+                <option>No preference</option><option>3-star hotels</option><option>4-star hotels</option><option>5-star hotels</option><option>Resorts, houseboats and homestays</option>
+              </select></div>
+            <div class="field"><label for="pf-start">Travel from</label><input id="pf-start" name="start" type="date"></div>
+            <div class="field"><label for="pf-end">Travel until</label><input id="pf-end" name="end" type="date"></div>
+            <label class="inline-check full" for="pf-flex"><input type="checkbox" id="pf-flex" name="flex"> My dates are flexible</label>
+            <div class="row2 full">
+              <div class="field"><label for="pf-adults">Adults</label><input id="pf-adults" name="adults" type="number" min="1" max="50" value="2"></div>
+              <div class="field"><label for="pf-children">Children</label><input id="pf-children" name="children" type="number" min="0" max="50" value="0"></div>
+            </div>
+            <div class="row2 full">
+              <div class="field"><label for="pf-budget">Budget per person</label><input id="pf-budget" name="budget" type="number" min="0" inputmode="numeric" placeholder="e.g. 60000"></div>
+              <div class="field"><label for="pf-cur">Currency</label>
+                <select id="pf-cur" name="cur"><option>INR</option><option>SAR</option><option>AED</option><option>QAR</option><option>KWD</option><option>OMR</option><option>BHD</option></select></div>
+            </div>
+            <fieldset class="field full">
+              <legend>Also include</legend>
+              <div class="checks" id="svcChecks">
+                <label><input type="checkbox" name="svc" value="Flight tickets">Flight tickets</label>
+                <label><input type="checkbox" name="svc" value="Hotel reservations">Hotels</label>
+                <label><input type="checkbox" name="svc" value="Airport transfers">Airport transfers</label>
+                <label><input type="checkbox" name="svc" value="Sightseeing">Sightseeing</label>
+                <label><input type="checkbox" name="svc" value="Transportation">Transportation</label>
+              </div>
+            </fieldset>
+            <div class="field full"><label for="pf-notes">Anything else we should know?</label><textarea id="pf-notes" name="notes" placeholder="Occasion, food preferences, mobility needs, places not on the list"></textarea></div>
+            <p class="err full" id="pf-err" role="alert"></p>
+            <div class="full"><button class="btn btn-primary" type="submit">Request my quotation</button></div>
+          </form>
+          <div class="result" id="planResult" hidden></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" id="packages">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="mono">Tour packages</span>
+        <h2>Start from a ready route</h2>
+        <p>Pick a curated package, then change anything. Every quotation is prepared for your dates and group size.</p>
+      </div>
+      <div class="grid" id="pkgGrid"></div>
+    </div>
+  </section>
+
+  <section class="sec ay" id="ayurveda">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="mono">Kerala Ayurveda packages</span>
+        <h2>Rest and renewal, the Kerala way</h2>
+        <p>Choose a programme and a length of stay. We plan the rest around it and quote it with your trip.</p>
+      </div>
+      <div class="ay-grid" id="ayGrid"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="flights">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="mono">Flight booking assistance</span>
+        <h2>Need a ticket?</h2>
+        <p>Tell us the route and dates for domestic or international flights. We send fare options on WhatsApp.</p>
+      </div>
+      <div class="fl">
+        <div class="panel">
+          <h3>Popular routes</h3>
+          <p class="count">Tap a route to fill the form.</p>
+          <div class="routes" id="routes"></div>
+        </div>
+        <div class="panel">
+          <form id="flForm" class="form cols" novalidate>
+            <fieldset class="field full"><legend>Trip type</legend>
+              <div class="radios">
+                <label><input type="radio" name="fltype" value="Round trip" checked> Round trip</label>
+                <label><input type="radio" name="fltype" value="One way"> One way</label>
+              </div></fieldset>
+            <div class="field"><label for="fl-from">From</label><input id="fl-from" name="from" placeholder="City or airport" required></div>
+            <div class="field"><label for="fl-to">To</label><input id="fl-to" name="to" placeholder="City or airport" required></div>
+            <div class="field"><label for="fl-dep">Departure</label><input id="fl-dep" name="dep" type="date" required></div>
+            <div class="field" id="fl-ret-wrap"><label for="fl-ret">Return</label><input id="fl-ret" name="ret" type="date"></div>
+            <div class="row2 full">
+              <div class="field"><label for="fl-adults">Adults</label><input id="fl-adults" name="adults" type="number" min="1" max="20" value="1"></div>
+              <div class="field"><label for="fl-children">Children</label><input id="fl-children" name="children" type="number" min="0" max="20" value="0"></div>
+            </div>
+            <div class="field"><label for="fl-name">Your name</label><input id="fl-name" name="name" autocomplete="name" required></div>
+            <div class="field"><label for="fl-phone">WhatsApp number</label><input id="fl-phone" name="phone" type="tel" inputmode="tel" required></div>
+            <p class="err full" id="fl-err" role="alert"></p>
+            <div class="full"><button class="btn btn-primary" type="submit">Ask for fares</button></div>
+          </form>
+          <div class="result" id="flResult" hidden></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-alt" id="services">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="mono">Other travel services</span>
+        <h2>Everything around the trip</h2>
+        <p>Add any of these to your enquiry, with or without a full itinerary.</p>
+      </div>
+      <div class="svc" id="svcGrid"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="kasavu" aria-hidden="true" style="margin-top:-2.5rem;margin-bottom:2rem"></div>
+  <div class="wrap foot-grid">
+    <div>
+      <div class="big">Nimble Holidays</div>
+      <p>The World Is for Everyone.</p>
+    </div>
+    <p>Since 2010 · Onattukara, Mavelikkara, Kerala, India. Serving travellers from India and the GCC.</p>
+  </div>
+</footer>
+
+<div class="dock">
+  <a class="dock-trip" id="dockTrip" href="#plan" hidden><span id="dockCount"></span><strong>Plan my trip</strong></a>
+  <a class="btn btn-wa" id="waDock" href="#" target="_blank" rel="noopener">WhatsApp us</a>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function () {
+  var WA_NUMBER = ''; // Add the business number in international format, digits only, e.g. 91XXXXXXXXXX
+  function waLink(text) { return 'https://wa.me/' + (WA_NUMBER ? WA_NUMBER : '') + '?text=' + encodeURIComponent(text); }
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+
+  /* ---------- scenes (original illustrations, stand-ins for destination photography) ---------- */
+  function rnd(seed) { var s = (seed * 7919) % 233280 || 1; return function () { s = (s * 9301 + 49297) % 233280; return s / 233280; }; }
+  function palm(x, y, sc, c) {
+    var f = ''; [-25, 15, 55, 125, 165, 205, 245].forEach(function (a) { f += '<ellipse cx="15" cy="0" rx="17" ry="4" transform="rotate(' + a + ')"/>'; });
+    return '<g fill="' + c + '" stroke="' + c + '" transform="translate(' + x + ' ' + y + ') scale(' + sc + ')"><path d="M0 0Q5 -28 -1 -58" fill="none" stroke-width="3"/><g transform="translate(-1 -58)">' + f + '</g></g>';
+  }
+  var SC = {
+    backwater: { sky: ['#FFD9A3', '#F58B63'], draw: function () {
+      return '<circle cx="285" cy="105" r="36" fill="#FFF3D1" opacity=".92"/>' +
+        '<path d="M0 150C60 138 120 150 190 144S330 136 400 148V170H0z" fill="#1F5B45"/>' + palm(60, 150, 1, '#174735') + palm(92, 152, .8, '#174735') + palm(330, 148, .9, '#174735') +
+        '<rect y="160" width="400" height="100" fill="#127A78"/><rect y="160" width="400" height="30" fill="#E9A06F" opacity=".35"/>' +
+        '<path d="M118 196h112l-9 15h-94z" fill="#3A2A20"/><path d="M124 196q50-38 100 0z" fill="#D2A24F"/>' +
+        '<g stroke="#fff" stroke-width="2" opacity=".35"><path d="M20 224h70M140 236h90M260 222h80M60 246h60M290 244h70"/></g>'; } },
+    hills: { sky: ['#CDEBDD', '#F4F7E6'], draw: function () {
+      var r = ''; for (var i = 0; i < 5; i++) r += '<path d="M0 ' + (226 + i * 6) + 'Q130 ' + (194 + i * 6) + ' 260 ' + (220 + i * 6) + 'T400 ' + (210 + i * 6) + '" stroke="#1F5E41" stroke-width="1.5" fill="none" opacity=".55"/>';
+      return '<circle cx="300" cy="80" r="26" fill="#FFFBE6" opacity=".9"/><path d="M0 150Q70 85 150 125T300 105T400 120V260H0z" fill="#8CC7A5"/><path d="M0 185Q90 135 200 170T400 150V260H0z" fill="#4E9B73"/><path d="M0 220Q120 170 240 205T400 190V260H0z" fill="#2E7A55"/>' + r; } },
+    forest: { sky: ['#DDEFD6', '#F6F5DA'], draw: function (u) {
+      var out = '<circle cx="90" cy="70" r="24" fill="#FFF8D6" opacity=".9"/>', R = rnd(u.length + 3), L = [['#6DB08A', 175], ['#35825F', 210], ['#17543F', 245]];
+      L.forEach(function (l, k) { out += '<g fill="' + l[0] + '">'; for (var i = 0; i < 10; i++) { var x = i * 42 - 10 + R() * 16, h = 46 + R() * 30 + k * 10; out += '<path d="M' + x + ' ' + l[1] + 'l18 -' + h + ' l18 ' + h + 'z"/>'; } out += '</g><rect y="' + l[1] + '" width="400" height="' + (260 - l[1]) + '" fill="' + l[0] + '"/>'; });
+      return out; } },
+    beach: { sky: ['#FFD9A3', '#FF9F7A'], draw: function () {
+      return '<circle cx="300" cy="140" r="30" fill="#FFF1C9" opacity=".95"/><rect y="150" width="400" height="70" fill="#2C9CC4"/><rect y="150" width="400" height="18" fill="#FFC890" opacity=".45"/>' +
+        '<path d="M0 205Q120 188 240 210T400 198V260H0z" fill="#F3D9A6"/><path d="M0 232Q150 214 400 236V260H0z" fill="#E7C78A"/>' + palm(70, 222, 1.1, '#1C5A45') + palm(110, 228, .8, '#1C5A45') +
+        '<g stroke="#fff" stroke-width="2" opacity=".5"><path d="M190 190h40M250 200h50M120 197h30"/></g>'; } },
+    cliff: { sky: ['#FFE0B0', '#F7A072'], draw: function () {
+      return '<circle cx="300" cy="115" r="28" fill="#FFF1C9" opacity=".95"/><rect y="140" width="400" height="120" fill="#1F8DB5"/>' +
+        '<path d="M0 80H150L185 135L160 260H0z" fill="#C2593B"/><path d="M0 100H120L150 150L130 260H0z" fill="#D9784F"/><path d="M0 70H150V82H0z" fill="#5BA672"/>' +
+        '<g stroke="#fff" stroke-width="2.5" opacity=".6"><path d="M180 228h60M250 214h70M200 246h90M300 240h60"/></g>'; } },
+    fort: { sky: ['#F9D6A0', '#E87F6B'], draw: function () {
+      return '<circle cx="300" cy="90" r="26" fill="#FFF1C9" opacity=".9"/><rect y="190" width="400" height="70" fill="#2B7C86"/>' +
+        '<rect x="50" y="120" width="100" height="72" fill="#8E3F32"/><path d="M42 120L100 82L158 120z" fill="#5E2A25"/><path d="M80 192v-26a20 20 0 0 1 40 0v26z" fill="#2B1512"/>' +
+        '<rect x="170" y="142" width="96" height="50" fill="#B15B3F"/><path d="M162 142L218 108L274 142z" fill="#6E3128"/><path d="M200 192v-20a18 18 0 0 1 36 0v20z" fill="#2B1512"/>' +
+        '<path d="M300 192L338 118M338 118L372 150M338 118Q362 160 346 192" stroke="#2B1512" stroke-width="3" fill="none"/><path d="M322 150Q346 170 366 156" stroke="#2B1512" stroke-width="1.5" fill="none"/>' +
+        '<g stroke="#fff" stroke-width="2" opacity=".35"><path d="M30 220h80M150 236h90M270 224h90"/></g>'; } },
+    city: { sky: ['#25326E', '#F07C8E'], draw: function (u) {
+      var R = rnd(u.length * 5 + 1), out = '<rect y="210" width="400" height="50" fill="#1B2352"/>', i, h, w;
+      for (i = 0; i < 15; i++) { h = 40 + R() * 80; out += '<rect x="' + (i * 27) + '" y="' + (210 - h) + '" width="25" height="' + h + '" fill="#14193F"/>'; for (w = 0; w < 5; w++) out += '<rect x="' + (i * 27 + 4 + (w % 2) * 10) + '" y="' + (214 - h + w * 14) + '" width="4" height="5" fill="#FFD66B" opacity=".8"/>'; }
+      out += '<path d="M300 210V80l6-26 6 26v130z" fill="#0D1233"/><path d="M0 232h400" stroke="#F07C8E" stroke-width="2" opacity=".3"/><path d="M40 244h60M180 240h90M300 248h60" stroke="#FFD66B" stroke-width="2" opacity=".3"/>';
+      return out; } },
+    desert: { sky: ['#FFE5B0', '#F7A25B'], draw: function () {
+      return '<circle cx="110" cy="100" r="30" fill="#FFF3D1" opacity=".95"/><path d="M0 170Q100 120 200 165T400 150V260H0z" fill="#E9A15B"/><path d="M0 205Q130 160 260 200T400 185V260H0z" fill="#D57F43"/><path d="M0 240Q150 205 300 235T400 225V260H0z" fill="#B8602F"/>'; } },
+    snow: { sky: ['#9EC1F0', '#EAF4FF'], draw: function () {
+      return '<path d="M-30 230L90 85L210 230z" fill="#7F9CC7"/><path d="M90 85L125 138L100 128L90 142L70 120z" fill="#fff"/><path d="M120 230L260 60L420 230z" fill="#6A89B8"/><path d="M260 60L302 126L276 112L260 138L236 108z" fill="#fff"/>' +
+        '<rect y="222" width="400" height="38" fill="#E8F1FB"/><g fill="#2C5B54"><path d="M40 232l12-34 12 34z"/><path d="M70 236l10-28 10 28z"/><path d="M330 232l12-34 12 34z"/></g>'; } },
+    island: { sky: ['#BDE9F5', '#F6FBFF'], draw: function () {
+      return '<circle cx="320" cy="70" r="24" fill="#FFF8D6"/><rect y="125" width="400" height="135" fill="#1ABBC5"/><ellipse cx="200" cy="172" rx="120" ry="26" fill="#7FE3DA"/><rect y="205" width="400" height="55" fill="#0F94A8"/>' +
+        '<ellipse cx="200" cy="170" rx="62" ry="13" fill="#F4E1B5"/>' + palm(190, 168, 1.1, '#1C6B50') + palm(220, 170, .8, '#1C6B50'); } },
+    wellness: { sky: ['#E4F3E7', '#BFE2C9'], draw: function () {
+      return '<path d="M200 28C290 84 290 180 200 236C110 180 110 84 200 28z" fill="#3E9468"/><path d="M200 44V226" stroke="#BFE2C9" stroke-width="3"/><path d="M200 90L160 70M200 120L152 98M200 150L156 130M200 90L240 70M200 120L248 98M200 150L244 130" stroke="#BFE2C9" stroke-width="2" fill="none"/>' +
+        '<path d="M330 50q20 26 0 44q-20 -18 0 -44z" fill="#F2B63A"/><ellipse cx="80" cy="226" rx="38" ry="10" fill="#6F8F86"/><ellipse cx="80" cy="212" rx="28" ry="8" fill="#8EAEA4"/><ellipse cx="80" cy="200" rx="18" ry="6" fill="#AFCBC2"/>'; } }
+  };
+  function scene(kind, u) {
+    var s = SC[kind] || SC.hills;
+    return '<svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><defs><linearGradient id="sk-' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + s.sky[0] + '"/><stop offset="1" stop-color="' + s.sky[1] + '"/></linearGradient></defs><rect width="400" height="260" fill="url(#sk-' + u + ')"/>' + s.draw(u) + '</svg>';
+  }
+
+  /* ---------- data ---------- */
+  var PLACES = [
+    { id: 'alleppey', name: 'Alleppey Backwaters', region: 'kerala', type: 'Destination', scene: 'backwater', note: 'Cruise the Vembanad lake and village canals by houseboat.' },
+    { id: 'munnar', name: 'Munnar', region: 'kerala', type: 'Destination', scene: 'hills', note: 'Tea estates, mist and cool air in the high range.' },
+    { id: 'thekkady', name: 'Thekkady', region: 'kerala', type: 'Destination', scene: 'forest', note: 'Periyar forests, spice gardens and a boat ride on the lake.' },
+    { id: 'kovalam', name: 'Kovalam', region: 'kerala', type: 'Destination', scene: 'beach', note: 'Crescent beaches near Thiruvananthapuram.' },
+    { id: 'varkala', name: 'Varkala', region: 'kerala', type: 'Destination', scene: 'cliff', note: 'Red cliffs above the Arabian Sea, with cafes along the edge.' },
+    { id: 'kochi', name: 'Kochi Fort', region: 'kerala', type: 'Destination', scene: 'fort', note: 'Chinese fishing nets, spice markets and old churches.' },
+    { id: 'wayanad', name: 'Wayanad', region: 'kerala', type: 'Destination', scene: 'forest', note: 'Waterfalls, caves and forest stays in the Western Ghats.' },
+    { id: 'goa', name: 'Goa', region: 'india', type: 'Destination', scene: 'beach', note: 'Beaches, old Portuguese quarters and relaxed evenings.' },
+    { id: 'kashmir', name: 'Kashmir', region: 'india', type: 'Destination', scene: 'snow', note: 'Snow peaks, Dal Lake shikaras and meadow day trips.' },
+    { id: 'rajasthan', name: 'Rajasthan', region: 'india', type: 'Destination', scene: 'desert', note: 'Forts, palaces and desert camps across the royal cities.' },
+    { id: 'andaman', name: 'Andaman Islands', region: 'india', type: 'Destination', scene: 'island', note: 'Clear water, white sand and island hopping.' },
+    { id: 'ladakh', name: 'Ladakh', region: 'india', type: 'Destination', scene: 'snow', note: 'High passes, monasteries and mountain lakes.' },
+    { id: 'dubai', name: 'Dubai', region: 'international', type: 'Destination', scene: 'city', note: 'Skyline, souks and beaches, close to home for GCC residents.' },
+    { id: 'singapore', name: 'Singapore', region: 'international', type: 'Destination', scene: 'city', note: 'Gardens, harbour views and easy family days out.' },
+    { id: 'maldives', name: 'Maldives', region: 'international', type: 'Destination', scene: 'island', note: 'Overwater stays and lagoons for couples and families.' },
+    { id: 'thailand', name: 'Thailand', region: 'international', type: 'Destination', scene: 'beach', note: 'Bangkok city days and Phuket beaches in one trip.' },
+    { id: 'srilanka', name: 'Sri Lanka', region: 'international', type: 'Destination', scene: 'hills', note: 'Hill country trains, tea and southern coast beaches.' },
+    { id: 'houseboat', name: 'Houseboat overnight stay', region: 'experiences', type: 'Experience', scene: 'backwater', note: 'Sleep on the water with meals cooked on board.' },
+    { id: 'ayurveda', name: 'Ayurveda retreat', region: 'experiences', type: 'Experience', scene: 'wellness', note: 'Treatment and rest programmes in a Kerala setting.' },
+    { id: 'safari', name: 'Desert safari', region: 'experiences', type: 'Experience', scene: 'desert', note: 'Dune drive, sunset and a camp dinner.' },
+    { id: 'plantation', name: 'Tea plantation walk', region: 'experiences', type: 'Experience', scene: 'hills', note: 'Walk the estates and see how tea is made.' },
+    { id: 'kathakali', name: 'Kathakali evening', region: 'experiences', type: 'Experience', scene: 'fort', note: 'Watch the make-up and a live performance of Kerala dance-drama.' }
+  ];
+  var BY = {}; PLACES.forEach(function (p) { BY[p.id] = p; });
+  var REGION = { kerala: 'Kerala', india: 'India', international: 'International', experiences: 'Experiences' };
+
+  var PACKAGES = [
+    { name: 'Kerala Backwaters and Hills', nights: 6, route: 'Kochi · Munnar · Thekkady · Alleppey', scene: 'backwater', places: ['kochi', 'munnar', 'thekkady', 'alleppey'], inc: ['Hotels and one houseboat night', 'Airport and road transfers', 'Guided sightseeing'] },
+    { name: 'Kerala Beaches and Backwaters', nights: 5, route: 'Kovalam · Alleppey · Kochi', scene: 'beach', places: ['kovalam', 'alleppey', 'kochi'], inc: ['Beach resort and houseboat stay', 'Transfers between stops', 'Fort Kochi heritage walk'] },
+    { name: 'Dubai City Break', nights: 4, route: 'Dubai', scene: 'city', places: ['dubai', 'safari'], inc: ['Hotel stay', 'Desert safari with dinner', 'City tour and transfers'] },
+    { name: 'Maldives Island Escape', nights: 4, route: 'Maldives', scene: 'island', places: ['maldives'], inc: ['Resort stay', 'Speedboat or seaplane transfer', 'Snorkelling trip'] },
+    { name: 'Kashmir Valley', nights: 6, route: 'Srinagar · Gulmarg · Pahalgam', scene: 'snow', places: ['kashmir'], inc: ['Hotels and a houseboat night', 'Shikara ride', 'Day trips by private car'] },
+    { name: 'Thailand Highlights', nights: 5, route: 'Bangkok · Phuket', scene: 'beach', places: ['thailand'], inc: ['Hotels in both cities', 'Island day trip', 'Airport transfers'] }
+  ];
+
+  var AYUR = [
+    { name: 'Rejuvenation', len: '7 to 14 days', text: 'A gentle programme of massage, herbal therapies and simple meals for a full reset.' },
+    { name: 'Stress and sleep', len: 'About 7 days', text: 'Calming therapies and a slow daily routine for people who need to switch off.' },
+    { name: 'Panchakarma detox', len: '14 to 21 days', text: 'The classic cleansing course, planned with a longer stay in one place.' },
+    { name: 'Back and joint care', len: 'About 14 days', text: 'Targeted therapies for stiffness and strain, with rest and light movement.' }
+  ];
+
+  var ROUTES = [['Riyadh', 'Kochi'], ['Jeddah', 'Thiruvananthapuram'], ['Dammam', 'Kozhikode'], ['Kochi', 'Delhi']];
+
+  var SVC = [
+    { name: 'Flight tickets', text: 'Domestic and international fares, with options on WhatsApp.', icon: '<path d="M2 12l20-8-6 16-4-6-10-2z"/>' },
+    { name: 'Hotel reservations', text: 'Stays from budget rooms to resorts, matched to your trip.', icon: '<path d="M3 19V7M3 14h18v5M21 14v-2a3 3 0 0 0-3-3h-7v5"/>' },
+    { name: 'Airport transfers', text: 'Pick-up and drop at Kerala and other airports.', icon: '<path d="M5 16l1.500-5h11L19 16M4 16h16v3H4zM7 19v1.500M17 19v1.500"/>' },
+    { name: 'Sightseeing', text: 'Local guides and day tours at every stop.', icon: '<path d="M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.500"/>' },
+    { name: 'Transportation', text: 'Cars, vans and coaches for families and groups.', icon: '<rect x="4" y="4" width="16" height="13" rx="2"/><path d="M4 11h16M7 20v-3M17 20v-3"/>' }
+  ];
+
+  /* ---------- state ---------- */
+  var trip = [];
+  try { var saved = JSON.parse(localStorage.getItem('nh-trip') || '[]'); if (Array.isArray(saved)) trip = saved.filter(function (id) { return BY[id]; }); } catch (e) {}
+  function persist() { try { localStorage.setItem('nh-trip', JSON.stringify(trip)); } catch (e) {} }
+  var filter = 'kerala';
+  var toastTimer;
+  function toast(msg) { var t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.hidden = true; }, 2400); }
+
+  /* ---------- render ---------- */
+  $('#heroArt').innerHTML = scene('backwater', 'hero');
+
+  function renderFilters() {
+    var keys = ['kerala', 'india', 'international', 'experiences', 'all'];
+    $('#filters').innerHTML = keys.map(function (k) { return '<button type="button" class="chip" data-f="' + k + '" aria-pressed="' + (k === filter) + '">' + (k === 'all' ? 'All' : REGION[k]) + '</button>'; }).join('');
+  }
+  function renderPlaces() {
+    var list = PLACES.filter(function (p) { return filter === 'all' || p.region === filter; });
+    $('#placeGrid').innerHTML = list.map(function (p) {
+      var on = trip.indexOf(p.id) > -1;
+      return '<article class="card"><div class="card-art">' + scene(p.scene, 'p-' + p.id) + '</div><div class="card-body"><span class="mono tag">' + p.type + ' · ' + REGION[p.region] + '</span><h3>' + p.name + '</h3><p>' + p.note + '</p><button type="button" class="btn btn-sm add" data-id="' + p.id + '" aria-pressed="' + on + '">' + (on ? '✓ Added to trip' : '+ Add to trip') + '</button></div></article>';
+    }).join('');
+  }
+  function renderTrip() {
+    var n = trip.length;
+    $('#tlCount').textContent = n ? n + (n === 1 ? ' place selected' : ' places selected') : 'No places selected yet';
+    $('#tripEmpty').hidden = n > 0;
+    $('#tripList').innerHTML = trip.map(function (id) {
+      var p = BY[id];
+      return '<li><div class="th">' + scene(p.scene, 'l-' + id) + '</div><div><b>' + p.name + '</b><small>' + p.type + ' · ' + REGION[p.region] + '</small></div><button type="button" class="x" data-rm="' + id + '" aria-label="Remove ' + p.name + '">×</button></li>';
+    }).join('');
+    $('#dockTrip').hidden = n === 0;
+    $('#dockCount').textContent = n + (n === 1 ? ' place' : ' places');
+  }
+  function renderAll() { renderPlaces(); renderTrip(); }
+
+  $('#pkgGrid').innerHTML = PACKAGES.map(function (k, i) {
+    return '<article class="card pkg"><div class="card-art">' + scene(k.scene, 'k-' + i) + '</div><div class="card-body"><div class="dur"><h3>' + k.name + '</h3><span class="nights">' + k.nights + 'N</span></div><div class="route">' + k.route + '</div><ul>' + k.inc.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul><span class="quote">Quotation on request</span><button type="button" class="btn btn-sm btn-brand" data-pkg="' + i + '">Customise this package</button></div></article>';
+  }).join('');
+  $('#ayGrid').innerHTML = AYUR.map(function (a, i) {
+    return '<div class="ay-item"><span class="mono len">' + a.len + '</span><h3>' + a.name + '</h3><p>' + a.text + '</p><button type="button" class="btn btn-ghost btn-sm" data-ay="' + i + '">Plan this stay</button></div>';
+  }).join('');
+  $('#routes').innerHTML = ROUTES.map(function (r, i) { return '<button type="button" class="route-chip" data-route="' + i + '">' + r[0] + ' → ' + r[1] + '</button>'; }).join('');
+  $('#svcGrid').innerHTML = SVC.map(function (s, i) {
+    return '<div class="svc-item"><svg viewBox="0 0 24 24" aria-hidden="true">' + s.icon + '</svg><h3>' + s.name + '</h3><p>' + s.text + '</p><button type="button" class="btn btn-ghost btn-sm" data-svc="' + i + '">Add to my enquiry</button></div>';
+  }).join('');
+
+  /* ---------- interactions ---------- */
+  function add(ids) { var added = 0; ids.forEach(function (id) { if (BY[id] && trip.indexOf(id) < 0) { trip.push(id); added++; } }); persist(); renderAll(); return added; }
+  function remove(id) { trip = trip.filter(function (x) { return x !== id; }); persist(); renderAll(); }
+  function goPlan() { $('#plan').scrollIntoView({ behavior: 'smooth' }); }
+  function showForm() { $('#planForm').hidden = false; $('#planResult').hidden = true; }
+
+  $('#filters').addEventListener('click', function (e) { var b = e.target.closest('[data-f]'); if (!b) return; filter = b.getAttribute('data-f'); renderFilters(); renderPlaces(); });
+  $('#placeGrid').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-id]'); if (!b) return; var id = b.getAttribute('data-id');
+    if (trip.indexOf(id) > -1) { remove(id); toast(BY[id].name + ' removed'); } else { add([id]); toast(BY[id].name + ' added to your trip'); }
+  });
+  $('#tripList').addEventListener('click', function (e) { var b = e.target.closest('[data-rm]'); if (b) remove(b.getAttribute('data-rm')); });
+  $('#pkgGrid').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pkg]'); if (!b) return; var k = PACKAGES[+b.getAttribute('data-pkg')];
+    var n = add(k.places); var notes = $('#pf-notes'); var line = 'Based on the package: ' + k.name + ' (' + k.nights + ' nights).';
+    if (notes.value.indexOf(line) < 0) notes.value = (notes.value ? notes.value + '\n' : '') + line;
+    showForm(); toast(n ? n + ' places added from ' + k.name : k.name + ' is already in your list'); goPlan();
+  });
+  $('#ayGrid').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-ay]'); if (!b) return; var a = AYUR[+b.getAttribute('data-ay')];
+    add(['ayurveda']); var notes = $('#pf-notes'); var line = 'Ayurveda programme: ' + a.name + ' (' + a.len + ').';
+    if (notes.value.indexOf(line) < 0) notes.value = (notes.value ? notes.value + '\n' : '') + line;
+    showForm(); toast('Ayurveda added to your trip'); goPlan();
+  });
+  $('#svcGrid').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-svc]'); if (!b) return; var name = SVC[+b.getAttribute('data-svc')].name;
+    if (name === 'Flight tickets') { $('#flights').scrollIntoView({ behavior: 'smooth' }); return; }
+    var box = $$('#svcChecks input').filter(function (i) { return i.value === name || (name === 'Hotel reservations' && i.value === 'Hotel reservations'); })[0];
+    if (box) box.checked = true; showForm(); toast(name + ' added to your enquiry'); goPlan();
+  });
+  $('#routes').addEventListener('click', function (e) { var b = e.target.closest('[data-route]'); if (!b) return; var r = ROUTES[+b.getAttribute('data-route')]; $('#fl-from').value = r[0]; $('#fl-to').value = r[1]; $('#fl-dep').focus(); });
+
+  var today = new Date(); var iso = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+  ['#pf-start', '#pf-end', '#fl-dep', '#fl-ret'].forEach(function (s) { $(s).min = iso; });
+  function syncRet() { var one = $('input[name="fltype"]:checked').value === 'One way'; $('#fl-ret-wrap').hidden = one; }
+  $$('input[name="fltype"]').forEach(function (r) { r.addEventListener('change', syncRet); });
+
+  /* ---------- results ---------- */
+  function resultMarkup() {
+    return '<div><span class="mono tag">Enquiry summary ready</span><h3 style="margin-top:.35rem">Reference <span class="ref"></span></h3></div>' +
+      '<p class="count">This summary is saved on this device. Send it to our team on WhatsApp to get your quotation and follow up.</p>' +
+      '<pre></pre><div class="acts"><a class="btn btn-wa" target="_blank" rel="noopener" href="#">Send on WhatsApp</a><button type="button" class="btn btn-ghost" data-copy>Copy summary</button><button type="button" class="btn btn-ghost" data-edit>Edit enquiry</button></div>';
+  }
+  $('#planResult').innerHTML = resultMarkup(); $('#flResult').innerHTML = resultMarkup();
+  function makeRef() { return 'NH-' + Date.now().toString(36).slice(-5).toUpperCase(); }
+  function showResult(formEl, resEl, kind, text, ref) {
+    $('.ref', resEl).textContent = ref; $('pre', resEl).textContent = text; $('a.btn-wa', resEl).href = waLink(text);
+    formEl.hidden = true; resEl.hidden = false;
+    try { var all = JSON.parse(localStorage.getItem('nh-enquiries') || '[]'); all.push({ ref: ref, kind: kind, text: text, at: new Date().toISOString() }); localStorage.setItem('nh-enquiries', JSON.stringify(all.slice(-20))); } catch (e) {}
+    resEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  [['#planResult', '#planForm'], ['#flResult', '#flForm']].forEach(function (pair) {
+    var res = $(pair[0]), form = $(pair[1]);
+    res.addEventListener('click', function (e) {
+      if (e.target.closest('[data-edit]')) { res.hidden = true; form.hidden = false; return; }
+      if (e.target.closest('[data-copy]')) {
+        var pre = $('pre', res), txt = pre.textContent;
+        function sel() { var r = document.createRange(); r.selectNodeContents(pre); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); toast('Summary selected. Press and hold to copy.'); }
+        if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(txt).then(function () { toast('Summary copied'); }, sel); } else { sel(); }
+      }
+    });
+  });
+
+  function validPhone(v) { return v.replace(/\D/g, '').length >= 8; }
+  function fmtDate(v) { if (!v) return ''; var d = new Date(v + 'T00:00:00'); return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
+  function pax(a, c) { a = +a || 1; c = +c || 0; return a + (a === 1 ? ' adult' : ' adults') + (c ? ', ' + c + (c === 1 ? ' child' : ' children') : ''); }
+
+  $('#planForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = e.target, err = $('#pf-err'); err.textContent = '';
+    var name = f.name.value.trim(), phone = f.phone.value.trim();
+    if (!name) { err.textContent = 'Enter your name so we know who to reply to.'; f.name.focus(); return; }
+    if (!validPhone(phone)) { err.textContent = 'Enter a WhatsApp number with at least 8 digits.'; f.phone.focus(); return; }
+    if (!f.country.value) { err.textContent = 'Choose the country you live in.'; f.country.focus(); return; }
+    if (f.start.value && f.end.value && f.end.value < f.start.value) { err.textContent = 'The end date is before the start date. Check your travel dates.'; f.end.focus(); return; }
+    if (!trip.length && !f.notes.value.trim()) { err.textContent = 'Add at least one place to your trip list, or describe your idea in the notes.'; return; }
+    var svc = $$('input[name="svc"]:checked', f).map(function (i) { return i.value; });
+    var dates = f.flex.checked ? (f.start.value ? 'Around ' + fmtDate(f.start.value) + ' (flexible)' : 'Flexible') : (f.start.value || f.end.value ? fmtDate(f.start.value) + ' to ' + fmtDate(f.end.value) : 'Not decided');
+    var ref = makeRef();
+    var lines = ['Nimble Holidays trip enquiry ' + ref, '', 'Name: ' + name, 'WhatsApp: ' + phone, 'Living in: ' + f.country.value, '',
+      'Places and experiences: ' + (trip.length ? trip.map(function (id) { return BY[id].name; }).join(', ') : 'None selected'),
+      'Dates: ' + dates, 'Travellers: ' + pax(f.adults.value, f.children.value), 'Accommodation: ' + f.accom.value,
+      'Budget per person: ' + (f.budget.value ? f.cur.value + ' ' + Number(f.budget.value).toLocaleString('en-IN') : 'Not stated'),
+      'Also include: ' + (svc.length ? svc.join(', ') : 'Nothing extra')];
+    if (f.notes.value.trim()) lines.push('', 'Notes: ' + f.notes.value.trim());
+    showResult(f, $('#planResult'), 'trip', lines.join('\n'), ref);
+  });
+
+  $('#flForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = e.target, err = $('#fl-err'); err.textContent = '';
+    var type = $('input[name="fltype"]:checked', f).value;
+    if (!f.from.value.trim() || !f.to.value.trim()) { err.textContent = 'Enter both the departure and arrival cities.'; (f.from.value.trim() ? f.to : f.from).focus(); return; }
+    if (!f.dep.value) { err.textContent = 'Choose a departure date.'; f.dep.focus(); return; }
+    if (type === 'Round trip' && f.ret.value && f.ret.value < f.dep.value) { err.textContent = 'The return date is before the departure date.'; f.ret.focus(); return; }
+    if (!f.name.value.trim()) { err.textContent = 'Enter your name so we know who to reply to.'; f.name.focus(); return; }
+    if (!validPhone(f.phone.value)) { err.textContent = 'Enter a WhatsApp number with at least 8 digits.'; f.phone.focus(); return; }
+    var ref = makeRef();
+    var lines = ['Nimble Holidays flight enquiry ' + ref, '', 'Name: ' + f.name.value.trim(), 'WhatsApp: ' + f.phone.value.trim(), '',
+      'Route: ' + f.from.value.trim() + ' to ' + f.to.value.trim(), 'Type: ' + type, 'Departure: ' + fmtDate(f.dep.value)];
+    if (type === 'Round trip') lines.push('Return: ' + (f.ret.value ? fmtDate(f.ret.value) : 'Not decided'));
+    lines.push('Passengers: ' + pax(f.adults.value, f.children.value));
+    showResult(f, $('#flResult'), 'flight', lines.join('\n'), ref);
+  });
+
+  /* WhatsApp entry points */
+  var hello = 'Hello Nimble Holidays, I would like help planning a trip.';
+  $('#waTop').href = waLink(hello); $('#waDock').href = waLink(hello);
+
+  syncRet(); renderFilters(); renderAll();
+})();
+</script>
+
+</body></html>
