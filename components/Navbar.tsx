@@ -143,7 +143,7 @@ export const Navbar: React.FC = () => {
 
       {/* Main Header with Initial vs Sticky Transition (Zero Glitch / Butter Smooth) */}
       <header
-        className={`sticky top-0 z-40 transition-[padding,background-color,border-color,box-shadow] duration-300 ease-in-out will-change-[padding] transform-gpu ${
+        className={`sticky top-0 z-40 transition-[padding,background-color,border-color,box-shadow] duration-300 ease-in-out will-change-[padding] ${
           isScrolled
             ? 'glass-header border-b border-slate-200/90 shadow-sm py-2 sm:py-2.5'
             : 'bg-white border-b border-slate-100 shadow-none py-3.5 sm:py-4'
@@ -353,7 +353,7 @@ export const Navbar: React.FC = () => {
 
         {/* Mobile Slide-Down Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 shadow-xl animate-in slide-in-from-top duration-200">
+          <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 shadow-xl animate-in slide-in-from-top duration-200 max-h-[calc(100vh-5rem)] overflow-y-auto">
             <div className="flex flex-col gap-2">
               {/* Mobile Services Accordion */}
               <div>
