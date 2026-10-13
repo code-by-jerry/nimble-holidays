@@ -1,26 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --navy: #182e5c;
+  --navy-deep: #0e1e3e;
+  --navy-surface: #203a78;
+  --blue: #318bc6;
+  --cyan: #42bfd8;
+  --green: #20a88a;
+  --yellow: #f5d64c;
+  --orange: #f89a2e;
+  --red: #ed373b;
+  --ink: #111e33;
+  --muted: #5e708c;
+  --line: #e2eaf3;
+  --paper: #ffffff;
+  --soft: #f7f9fc;
+  --spectrum: linear-gradient(90deg, #42bfd8 0%, #20a88a 25%, #f5d64c 50%, #f89a2e 75%, #ed373b 100%);
+  --spectrum-subtle: linear-gradient(90deg, rgba(66, 191, 216, 0.15) 0%, rgba(32, 168, 138, 0.15) 25%, rgba(245, 214, 76, 0.15) 50%, rgba(248, 154, 46, 0.15) 75%, rgba(237, 55, 59, 0.15) 100%);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(78px + env(safe-area-inset-top, 0px));
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.font-mono-code {
+  font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+}
+
+/* Custom Brand Accents */
+.spectrum-bar {
+  height: 4px;
+  background: var(--spectrum);
+  width: 100%;
+}
+
+.spectrum-bar-thin {
+  height: 2px;
+  background: var(--spectrum);
+}
+
+.spectrum-text-gradient {
+  background: var(--spectrum);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.spectrum-border {
+  border-image: var(--spectrum) 1;
+}
+
+/* Glass & Overlays */
+.glass-header {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dark-glass {
+  background: rgba(14, 30, 62, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Animations */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-float {
+  animation: floatSlow 5s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* Hide scrollbar for tabs */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
